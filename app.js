@@ -59,7 +59,8 @@ let stored = JSON.parse(localStorage.getItem(KEY) || "null"),
   view = "today",
   activePriority = "all",
   deferredInstall,
-  lastCompletedId = null;
+  lastCompletedId = null,
+  activeDragTask = null;
 data.tasks = data.tasks || [];
 data.lists = data.lists?.length ? data.lists : defaults.lists;
 data.manualOrder = data.manualOrder === true;
@@ -232,8 +233,7 @@ function bindEmptyActions() {
   $("#empty-advanced")?.addEventListener("click", () => openModal());
 }
 
-function render() {
-  nav();
+function visibleTasks() {
   const now = today(),
     list = data.tasks.filter((t) => {
       if (activePriority !== "all" && t.priority !== activePriority)
@@ -247,6 +247,11 @@ function render() {
   if (!data.manualOrder) {
     list.sort((a, b) => a.createdAt - b.createdAt);
   }
+  return list;
+}
+
+function updateHeader(list) {
+  const now = today();
   const names = {
     today: "اليوم",
     upcoming: "القادمة",
@@ -276,6 +281,10 @@ function render() {
       : daily.length
         ? "أنجزت كل مهام اليوم"
         : `${remaining()} ${remaining() === 1 ? "مهمة نشطة" : "مهام نشطة"}`;
+  return { daily, dailyDone, showProgress };
+}
+
+function updateFilters() {
   $("#filters").innerHTML = views
     .map((v) => {
       const active = view === v[0] && activePriority === "all";
@@ -292,6 +301,9 @@ function render() {
           render();
         }),
     );
+}
+
+function updateProgress({ daily, dailyDone, showProgress }) {
   const progressBlock = $("#progress-block"),
     pct = daily.length ? Math.round((dailyDone / daily.length) * 100) : 0;
   if (showProgress) {
@@ -350,10 +362,85 @@ function render() {
   } else {
     progressBlock.hidden = true;
   }
-  $("#tasks").innerHTML = list.length
-    ? list.map(taskHtml).join("")
-    : emptyStateHtml();
-  bindEmptyActions();
+}
+
+function updateTaskElement(card, task) {
+  const due = dueMeta(task);
+  card.className = `task priority-${task.priority || "normal"} ${task.done ? "done" : ""}`;
+  const check = card.querySelector(".check");
+  check.className = `check ${task.done ? "done" : ""}`;
+  check.textContent = task.done ? "✓" : "";
+  check.setAttribute(
+    "aria-label",
+    task.done ? "إلغاء الإنجاز" : "تعليم كمنجزة",
+  );
+  const text = card.querySelector(".task-text");
+  text.textContent = task.text;
+  text.dataset.editId = task.id;
+  const priorityName = priorityNames[task.priority] || "عادية";
+  const repeatLabel =
+    task.repeat === "daily"
+      ? "يومي"
+      : task.repeat === "weekly"
+        ? "أسبوعي"
+        : task.repeat === "monthly"
+          ? "شهري"
+          : "";
+  card.querySelector(".task-meta").innerHTML = `
+    <span class="meta-chip ${due.chipClass}">${due.label}</span>
+    <span class="meta-chip priority-${task.priority || "normal"}">${priorityName}</span>
+    ${repeatLabel ? `<span class="meta-chip">↻ ${repeatLabel}</span>` : ""}`;
+  card.querySelector(".task-delete").dataset.id = task.id;
+}
+
+function createTaskElement(task) {
+  const template = document.createElement("template");
+  template.innerHTML = taskHtml(task).trim();
+  return template.content.firstElementChild;
+}
+
+function reconcileTaskList(list) {
+  if (activeDragTask) return;
+  const container = $("#tasks");
+  const existing = new Map(
+    [...container.querySelectorAll(".task")].map((card) => [
+      card.dataset.id,
+      card,
+    ]),
+  );
+  if (!list.length) {
+    if (!container.querySelector(".empty")) container.innerHTML = emptyStateHtml();
+    bindEmptyActions();
+    return;
+  }
+  container.querySelector(".empty")?.remove();
+  const visibleIds = new Set(list.map((task) => task.id));
+  existing.forEach((card, taskId) => {
+    if (!visibleIds.has(taskId)) card.remove();
+  });
+  let previous = null;
+  list.forEach((task) => {
+    let card = existing.get(task.id);
+    if (!card) {
+      card = createTaskElement(task);
+      updateTaskElement(card, task);
+    } else {
+      updateTaskElement(card, task);
+    }
+    if (card !== previous?.nextElementSibling) {
+      container.insertBefore(card, previous ? previous.nextElementSibling : container.firstElementChild);
+    }
+    previous = card;
+  });
+}
+
+function render() {
+  nav();
+  const list = visibleTasks();
+  const progressState = updateHeader(list);
+  updateFilters();
+  updateProgress(progressState);
+  reconcileTaskList(list);
   if (lastCompletedId) {
     const card = document.querySelector(`.task[data-id="${lastCompletedId}"]`);
     if (card) card.classList.add("just-completed");
@@ -403,6 +490,8 @@ function escape(s) {
 
 function startDrag(event, task) {
   event.preventDefault();
+  if (activeDragTask) return;
+  activeDragTask = task;
   const handle = event.target.closest(".drag-handle") || event.currentTarget,
     container = $("#tasks"),
     indicator = $("#task-drop-indicator"),
@@ -473,6 +562,7 @@ function startDrag(event, task) {
   const end = (cancelled) => {
     if (ended) return;
     ended = true;
+    activeDragTask = null;
     rafPending = false;
 
     handle.removeEventListener("pointermove", move);
