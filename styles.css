@@ -1531,6 +1531,9 @@ main {
     gap: var(--space-2);
     padding: var(--space-3);
     padding-inline: var(--space-3);
+  }
+
+  .task:not(.drag-floating) {
     /* Prevent lift on mobile — less distracting */
     transform: none !important;
   }
