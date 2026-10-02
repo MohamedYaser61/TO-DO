@@ -453,12 +453,14 @@ function startDrag(event, task) {
   placeholder.style.transition = "transform .22s cubic-bezier(.22,.61,.36,1)";
 
   let rafPending = false;
+  let ended = false;
   let currentX = initialX;
   let currentY = initialY;
   let lastTargetIndex = gapIndex;
 
   const processDragFrame = () => {
     rafPending = false;
+    if (ended) return;
 
     if (currentY < 90) window.scrollBy(0, -10);
     else if (currentY > window.innerHeight - 90) window.scrollBy(0, 10);
@@ -513,9 +515,14 @@ function startDrag(event, task) {
   };
 
   const end = () => {
+    if (ended) return;
+    ended = true;
+    rafPending = false;
+
     handle.removeEventListener("pointermove", move);
     handle.removeEventListener("pointerup", end);
     handle.removeEventListener("pointercancel", end);
+    handle.removeEventListener("lostpointercapture", end);
 
     cards.forEach((c) => {
       c.style.transition = "";
@@ -554,6 +561,7 @@ function startDrag(event, task) {
   handle.addEventListener("pointermove", move);
   handle.addEventListener("pointerup", end);
   handle.addEventListener("pointercancel", end);
+  handle.addEventListener("lostpointercapture", end);
 }
 
 function toggle(taskId) {
