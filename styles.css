@@ -201,26 +201,6 @@ a:focus-visible {
   border: 0;
 }
 
-.skip-link {
-  position: absolute;
-  inset-inline-start: var(--space-4);
-  top: var(--space-4);
-  z-index: 100;
-  padding: var(--space-2) var(--space-4);
-  background: var(--brand);
-  color: #fff;
-  border-radius: var(--radius-sm);
-  text-decoration: none;
-  font-weight: 600;
-  font-size: var(--font-size-sm);
-  transform: translateY(calc(-100% - var(--space-4)));
-  transition: transform var(--transition);
-}
-
-.skip-link:focus {
-  transform: translateY(0);
-}
-
 /* ============================================================
    BUTTONS
    ============================================================ */
@@ -1663,8 +1643,9 @@ main {
   .drawer-trigger {
     display: grid;
     position: absolute;
-    inset-block-start: 0;
+    inset-block-start: 59px;
     inset-inline-start: 0;
+    transform: translateY(-50%);
   }
 
   .top {

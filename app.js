@@ -35,6 +35,15 @@ const defaults = {
   ],
   theme: "",
 };
+const taskCreatedAt = (task, index, total, baseTime = Date.now()) => {
+  const timestamp =
+    typeof task.createdAt === "number"
+      ? task.createdAt
+      : Date.parse(task.createdAt);
+  return Number.isFinite(timestamp)
+    ? timestamp
+    : baseTime - (total - index) * 1000;
+};
 let stored = JSON.parse(localStorage.getItem(KEY) || "null"),
   data = Array.isArray(stored)
     ? {
@@ -53,9 +62,17 @@ let stored = JSON.parse(localStorage.getItem(KEY) || "null"),
   lastCompletedId = null;
 data.tasks = data.tasks || [];
 data.lists = data.lists?.length ? data.lists : defaults.lists;
+data.manualOrder = data.manualOrder === true;
+let migratedTaskTimestamps = false;
+data.tasks = data.tasks.map((task, index, tasks) => {
+  const createdAt = taskCreatedAt(task, index, tasks.length);
+  if (task.createdAt !== createdAt) migratedTaskTimestamps = true;
+  return { ...task, createdAt };
+});
 const $ = (s) => document.querySelector(s),
   save = () => localStorage.setItem(KEY, JSON.stringify(data)),
   remaining = () => data.tasks.filter((t) => !t.done).length;
+if (migratedTaskTimestamps) save();
 async function requestPersistentStorage() {
   if (!navigator.storage?.persist) return;
   try {
@@ -227,6 +244,9 @@ function render() {
       if (view === "done") return t.done;
       return !t.done;
     });
+  if (!data.manualOrder) {
+    list.sort((a, b) => a.createdAt - b.createdAt);
+  }
   const names = {
     today: "اليوم",
     upcoming: "القادمة",
@@ -484,6 +504,7 @@ function startDrag(event, task) {
     data.tasks = data.tasks.map((t) =>
       visibleSet.has(t.id) ? reorderedVisible[next++] : t,
     );
+    data.manualOrder = true;
     save();
     render();
   };
@@ -503,6 +524,7 @@ function toggle(taskId) {
       id: id(),
       done: false,
       due: addDate(t.due, t.repeat),
+      createdAt: Date.now(),
     });
   }
   save();
@@ -567,7 +589,7 @@ $("#capture").onsubmit = (e) => {
     $("#quick-text").focus();
     return;
   }
-  data.tasks.unshift({
+  data.tasks.push({
     id: id(),
     text,
     done: false,
@@ -575,6 +597,7 @@ $("#capture").onsubmit = (e) => {
     due: today(),
     priority: "normal",
     repeat: "",
+    createdAt: Date.now(),
   });
   $("#quick-text").value = "";
   save();
@@ -606,7 +629,13 @@ $("#task-modal").onsubmit = (e) => {
     Object.assign(data.tasks.find((t) => t.id === editingId), values);
     announce("تم حفظ التعديل");
   } else {
-    data.tasks.unshift({ id: id(), done: false, list: "inbox", ...values });
+    data.tasks.push({
+      id: id(),
+      done: false,
+      list: "inbox",
+      ...values,
+      createdAt: Date.now(),
+    });
     announce(`أُضيفت مهمة: ${text}`);
   }
   save();
@@ -683,6 +712,12 @@ $("#import-file").onchange = (e) => {
       if (!Array.isArray(imported.tasks) || !Array.isArray(imported.lists))
         throw Error();
       data = imported;
+      data.manualOrder = data.manualOrder === true;
+      const importedBaseTime = Date.now();
+      data.tasks = data.tasks.map((task, index, tasks) => ({
+        ...task,
+        createdAt: taskCreatedAt(task, index, tasks.length, importedBaseTime),
+      }));
       save();
       render();
       showToast("تم استيراد البيانات بنجاح");
