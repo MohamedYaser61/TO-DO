@@ -523,6 +523,9 @@ function startDrag(event, task) {
     handle.removeEventListener("pointerup", end);
     handle.removeEventListener("pointercancel", end);
     handle.removeEventListener("lostpointercapture", end);
+    window.removeEventListener("pointerup", end);
+    window.removeEventListener("pointercancel", end);
+    window.removeEventListener("blur", end);
 
     cards.forEach((c) => {
       c.style.transition = "";
@@ -562,6 +565,9 @@ function startDrag(event, task) {
   handle.addEventListener("pointerup", end);
   handle.addEventListener("pointercancel", end);
   handle.addEventListener("lostpointercapture", end);
+  window.addEventListener("pointerup", end);
+  window.addEventListener("pointercancel", end);
+  window.addEventListener("blur", end);
 }
 
 function toggle(taskId) {

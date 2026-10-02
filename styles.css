@@ -863,6 +863,12 @@ main {
   pointer-events: none;
 }
 
+.drag-floating {
+  position: fixed;
+  z-index: 100;
+  pointer-events: none;
+}
+
 /* ============================================================
    CHECKBOX / CHECK BUTTON
    ============================================================ */
