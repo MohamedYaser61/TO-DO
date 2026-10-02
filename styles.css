@@ -1,0 +1,1771 @@
+/* ============================================================
+   DESIGN TOKENS — Graphite + Emerald / Jade
+   ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  color-scheme: light;
+
+  /* — Surfaces — */
+  --bg:               #F0F2F0;
+  --bg-subtle:        #E6E9E6;
+  --panel:            #FFFFFF;
+  --panel-hover:      #F7FAF8;
+  --panel-elevated:   #FFFFFF;
+
+  /* — Text — */
+  --ink:              #141A17;
+  --ink-secondary:    #3A4440;
+  --muted:            #72807A;
+
+  /* — Borders — */
+  --line:             #D8DED9;
+  --line-strong:      #BEC7C1;
+
+  /* — Brand: Emerald / Jade — */
+  --brand:            #35B98A;
+  --brand-hover:      #2EA77D;
+  --brand-active:     #237A5F;
+  --brand-bright:     #4CCFA0;
+  --brand-soft:       #E6F7F1;
+  --brand-muted:      #A8DFC9;
+
+  /* — Semantic — */
+  --danger:           #C0392B;
+  --danger-soft:      #FDECEC;
+  --warning:          #B07D24;
+  --warning-soft:     #FFF7E6;
+  --success:          #35B98A;
+  --success-soft:     #E6F7F1;
+
+  /* — Priority — */
+  --priority-high:    #C0392B;
+  --priority-medium:  #B07D24;
+  --priority-normal:  #9DAAA4;
+
+  /* — Shadows — */
+  --shadow-sm:        0 1px 3px rgb(20 26 23 / 0.06), 0 1px 2px rgb(20 26 23 / 0.04);
+  --shadow-md:        0 4px 12px rgb(20 26 23 / 0.08), 0 2px 6px rgb(20 26 23 / 0.05);
+  --shadow-lg:        0 16px 40px rgb(20 26 23 / 0.12), 0 6px 16px rgb(20 26 23 / 0.07);
+
+  /* — Radius — */
+  --radius-xs:        6px;
+  --radius-sm:        8px;
+  --radius-md:        12px;
+  --radius-lg:        16px;
+  --radius-xl:        20px;
+  --radius-full:      999px;
+
+  /* — Spacing — */
+  --space-1:          4px;
+  --space-2:          8px;
+  --space-3:          12px;
+  --space-4:          16px;
+  --space-5:          20px;
+  --space-6:          24px;
+  --space-8:          32px;
+  --space-10:         40px;
+
+  /* — Touch — */
+  --touch-min:        44px;
+
+  /* — Typography — */
+  --font:             'Inter', system-ui, -apple-system, "Segoe UI", "Noto Sans Arabic", Tahoma, sans-serif;
+  --font-size-xs:     11px;
+  --font-size-sm:     13px;
+  --font-size-base:   15px;
+  --font-size-md:     16px;
+  --font-size-lg:     18px;
+  --font-size-xl:     20px;
+  --font-size-2xl:    24px;
+
+  /* — Motion — */
+  --ease-smooth:      cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-out:         cubic-bezier(0.0, 0.0, 0.2, 1);
+  --ease-in-out:      cubic-bezier(0.4, 0.0, 0.2, 1);
+  --duration-fast:    0.12s;
+  --duration-base:    0.18s;
+  --duration-slow:    0.28s;
+  --transition:       var(--duration-base) var(--ease-smooth);
+}
+
+/* ============================================================
+   DARK THEME — Deep Graphite + Emerald
+   ============================================================ */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* — Surfaces — */
+  --bg:               #0E0F0F;
+  --bg-subtle:        #141817;
+  --panel:            #151817;
+  --panel-hover:      #1B1F1D;
+  --panel-elevated:   #1B1F1D;
+
+  /* — Text — */
+  --ink:              #F3F2EC;
+  --ink-secondary:    #A9ADA7;
+  --muted:            #747A75;
+
+  /* — Borders — */
+  --line:             #2A302D;
+  --line-strong:      #343B37;
+
+  /* — Brand stays vibrant — */
+  --brand:            #35B98A;
+  --brand-hover:      #4CCFA0;
+  --brand-active:     #2EA77D;
+  --brand-bright:     #4CCFA0;
+  --brand-soft:       #0D2A20;
+  --brand-muted:      #237A5F;
+
+  /* — Semantic — */
+  --danger:           #F07070;
+  --danger-soft:      #2C1010;
+  --warning:          #E0A930;
+  --warning-soft:     #2A1E06;
+  --success:          #35B98A;
+  --success-soft:     #0D2A20;
+
+  /* — Priority — */
+  --priority-high:    #F07070;
+  --priority-medium:  #E0A930;
+  --priority-normal:  #4A5350;
+
+  /* — Shadows — */
+  --shadow-sm:        0 1px 3px rgb(0 0 0 / 0.25), 0 1px 2px rgb(0 0 0 / 0.18);
+  --shadow-md:        0 4px 16px rgb(0 0 0 / 0.35), 0 2px 6px rgb(0 0 0 / 0.22);
+  --shadow-lg:        0 16px 48px rgb(0 0 0 / 0.50), 0 8px 24px rgb(0 0 0 / 0.30);
+}
+
+/* ============================================================
+   RESET + BASE
+   ============================================================ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--bg);
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: var(--font-size-base);
+  line-height: 1.55;
+  direction: rtl;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button,
+input,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Focus rings — emerald instead of purple */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+  border-radius: var(--radius-xs);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  inset-inline-start: var(--space-4);
+  top: var(--space-4);
+  z-index: 100;
+  padding: var(--space-2) var(--space-4);
+  background: var(--brand);
+  color: #fff;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+  transform: translateY(-120%);
+  transition: transform var(--transition);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+
+/* Primary — Emerald */
+.btn-primary {
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: var(--brand);
+  color: #fff;
+  padding: 10px 20px;
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+  letter-spacing: 0.01em;
+  transition:
+    background var(--transition),
+    transform var(--duration-fast) var(--ease-out),
+    box-shadow var(--transition);
+}
+
+.btn-primary:hover {
+  background: var(--brand-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--brand) 35%, transparent);
+}
+
+.btn-primary:active {
+  background: var(--brand-active);
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* Secondary — Graphite surface */
+.btn-secondary {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--panel);
+  color: var(--ink-secondary);
+  padding: 10px 16px;
+  font-weight: 500;
+  font-size: var(--font-size-sm);
+  transition:
+    background var(--transition),
+    border-color var(--transition),
+    color var(--transition);
+}
+
+.btn-secondary:hover {
+  background: var(--panel-hover);
+  border-color: var(--line-strong);
+  color: var(--ink);
+}
+
+/* Ghost */
+.btn-ghost {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--muted);
+  transition:
+    background var(--transition),
+    color var(--transition),
+    border-color var(--transition);
+}
+
+.btn-ghost:hover {
+  background: var(--bg-subtle);
+  color: var(--ink-secondary);
+  border-color: var(--line-strong);
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+}
+
+/* Icon Buttons */
+.icon-button {
+  display: grid;
+  place-items: center;
+  width: var(--touch-min);
+  height: var(--touch-min);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--panel);
+  color: var(--ink-secondary);
+  transition:
+    background var(--transition),
+    border-color var(--transition),
+    color var(--transition),
+    transform var(--duration-fast) var(--ease-out);
+}
+
+.icon-button:hover {
+  background: var(--panel-hover);
+  border-color: var(--line-strong);
+  color: var(--ink);
+  transform: translateY(-1px);
+}
+
+.icon-button:active {
+  transform: translateY(0);
+}
+
+/* Accent icon button — emerald tint */
+.icon-button--accent {
+  border-color: color-mix(in srgb, var(--brand) 40%, var(--line));
+  background: color-mix(in srgb, var(--brand-soft) 60%, var(--panel));
+  color: var(--brand);
+}
+
+.icon-button--accent:hover {
+  border-color: var(--brand);
+  background: var(--brand-soft);
+  color: var(--brand-hover);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--brand) 20%, transparent);
+}
+
+.icon-button span {
+  font-size: 17px;
+  line-height: 1;
+}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.app {
+  display: grid;
+  grid-template-columns: 252px minmax(0, 1fr);
+  gap: var(--space-8);
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-6) var(--space-10);
+}
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+.side {
+  position: sticky;
+  top: var(--space-6);
+  height: fit-content;
+  align-self: start;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: 0 0 var(--space-8);
+}
+
+/* Logo mark — clean emerald square */
+.logo {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-md);
+  background: var(--brand);
+  color: #fff;
+  font-size: 17px;
+  font-weight: 700;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--brand) 40%, transparent);
+}
+
+.brand-name {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.side-heading {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--muted);
+  margin: 0 0 var(--space-2);
+  padding-inline: var(--space-2);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.nav,
+.priority-nav {
+  display: grid;
+  gap: 2px;
+  margin-bottom: var(--space-6);
+}
+
+/* Nav items */
+.nav button,
+.list-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  width: 100%;
+  min-height: 38px;
+  padding: 9px var(--space-3);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--ink-secondary);
+  text-align: start;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  transition:
+    background var(--transition),
+    color var(--transition);
+}
+
+.nav button:hover,
+.list-button:hover {
+  background: var(--bg-subtle);
+  color: var(--ink);
+}
+
+/* Active nav — emerald signal, not a big colored block */
+.nav button.active,
+.list-button.active {
+  background: color-mix(in srgb, var(--brand-soft) 80%, var(--panel));
+  color: var(--brand);
+  font-weight: 600;
+}
+
+:root[data-theme="dark"] .nav button.active,
+:root[data-theme="dark"] .list-button.active {
+  background: color-mix(in srgb, var(--brand-soft) 90%, transparent);
+  color: var(--brand);
+}
+
+.nav button .nav-label,
+.list-button .nav-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.nav-icon {
+  width: 1.15em;
+  text-align: center;
+  opacity: 0.8;
+  flex-shrink: 0;
+  font-style: normal;
+}
+
+.nav-icon--dir {
+  display: inline-block;
+  transform: scaleX(-1);
+}
+
+.count {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+  min-width: 18px;
+  text-align: center;
+}
+
+.nav button.active .count,
+.list-button.active .count {
+  color: var(--brand);
+}
+
+/* Side actions */
+.side-actions {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  padding-top: var(--space-3);
+  margin-top: var(--space-2);
+  border-top: 1px solid var(--line);
+}
+
+/* ============================================================
+   MAIN CONTENT
+   ============================================================ */
+main {
+  min-width: 0;
+  max-width: 700px;
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.top-intro {
+  min-width: 0;
+}
+
+.eyebrow {
+  color: var(--muted);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  margin: 0 0 2px;
+  letter-spacing: 0.01em;
+}
+
+.title {
+  font-size: clamp(1.6rem, 4vw, 1.9rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  margin: 0;
+  color: var(--ink);
+}
+
+.subtitle {
+  color: var(--muted);
+  font-size: var(--font-size-sm);
+  font-weight: 400;
+  margin: var(--space-2) 0 0;
+  line-height: 1.4;
+}
+
+.top-actions {
+  display: flex;
+  gap: var(--space-2);
+  flex-shrink: 0;
+  padding-top: 4px;
+}
+
+/* ============================================================
+   QUICK CAPTURE
+   ============================================================ */
+.capture {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-2);
+  direction: rtl;
+  padding: var(--space-2);
+  background: var(--panel);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--space-5);
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition);
+}
+
+.capture:focus-within {
+  border-color: var(--brand-muted);
+  box-shadow: var(--shadow-md), 0 0 0 3px color-mix(in srgb, var(--brand) 12%, transparent);
+}
+
+.capture input {
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  padding: 13px var(--space-3);
+  font-size: var(--font-size-md);
+  font-weight: 400;
+  direction: rtl;
+  text-align: right;
+  unicode-bidi: isolate;
+  color: var(--ink);
+}
+
+.capture input::placeholder {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.capture .btn-primary {
+  align-self: center;
+  margin-inline-end: 2px;
+  min-height: 40px;
+  padding-inline: 18px;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+}
+
+/* ============================================================
+   TOOLBAR — Filters + Search
+   ============================================================ */
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.filters {
+  display: none;
+  gap: 2px;
+  padding: var(--space-1);
+  background: var(--bg-subtle);
+  border-radius: var(--radius-md);
+  overflow: auto;
+  border: 1px solid var(--line);
+}
+
+.filters button {
+  white-space: nowrap;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--muted);
+  padding: 7px 12px;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  transition:
+    background var(--transition),
+    color var(--transition);
+}
+
+.filters button:hover {
+  color: var(--ink-secondary);
+}
+
+.filters button.active {
+  background: var(--panel);
+  color: var(--brand);
+  font-weight: 600;
+  box-shadow: var(--shadow-sm);
+}
+
+.search-wrap {
+  flex: 1;
+  max-width: 230px;
+  margin-inline-start: auto;
+}
+
+.search {
+  width: 100%;
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--bg-subtle);
+  padding: 8px var(--space-3);
+  font-size: var(--font-size-sm);
+  direction: rtl;
+  text-align: right;
+  unicode-bidi: isolate;
+  transition:
+    border-color var(--transition),
+    background var(--transition),
+    box-shadow var(--transition);
+}
+
+.search:hover {
+  border-color: var(--line-strong);
+}
+
+.search:focus {
+  border-color: var(--brand-muted);
+  background: var(--panel);
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 10%, transparent);
+}
+
+/* ============================================================
+   PROGRESS BAR
+   ============================================================ */
+.progress-block {
+  margin-bottom: var(--space-5);
+  padding: var(--space-3) var(--space-4);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+}
+
+.progress-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.progress-label {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--ink-secondary);
+}
+
+.progress-value {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--brand);
+  font-variant-numeric: tabular-nums;
+  transition: opacity 0.15s var(--ease-smooth);
+}
+
+/* Count tick: briefly dim the value when it changes */
+.progress-value.ticking {
+  opacity: 0.35;
+}
+
+/* ── Track ──────────────────────────────────────────────────
+   overflow: visible so the endpoint dot can bleed outside.
+   8px gives the fill enough mass for breathing to be visible
+   on a phone screen without being large.
+   ─────────────────────────────────────────────────────────── */
+.progress {
+  height: 8px;
+  background: var(--bg-subtle);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-full);
+  overflow: visible;
+  position: relative;
+}
+
+/* ── Fill ────────────────────────────────────────────────────
+   Single authoritative declaration — no duplicates.
+   overflow: hidden keeps ::after clipped inside.
+   transition drives the smooth width change on task complete.
+   animation is added only via state classes (.has-progress,
+   .complete) — never here.
+   ─────────────────────────────────────────────────────────── */
+.progress i {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: var(--brand);
+  border-radius: var(--radius-full);
+  transition: width 0.45s var(--ease-smooth);
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── Top-shine layer (::after) ───────────────────────────────
+   Static vertical gradient — adds depth, does NOT animate.
+   No shimmer. No sweep. No movement.
+   ─────────────────────────────────────────────────────────── */
+.progress i::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgb(255 255 255 / 0.18) 0%,
+    transparent 100%
+  );
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+/* ── Endpoint dot (::before) ─────────────────────────────────
+   Hidden by default. Shown only in the 1–99% state.
+   Sized slightly larger than the 8px track for a clear endpoint.
+   ─────────────────────────────────────────────────────────── */
+.progress i::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -2px;
+  transform: translateY(-50%);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--brand-bright);
+  opacity: 0;
+  display: none;
+  pointer-events: none;
+}
+
+/* ════════════════════════════════════════════════════════════
+   STATE 0% — static, empty
+   No class. No animation. Nothing moves.
+   ════════════════════════════════════════════════════════════ */
+
+/* ════════════════════════════════════════════════════════════
+   STATE 1–99% — calm, living, breathing progress
+   ① Fill breathing via filter:brightness().
+     brightness() on a coloured fill is clearly perceptible
+     on a thin bar; opacity alone is not.
+     Cycle: 4.5s ease-in-out.
+   ② Endpoint dot glow breathing.
+     Cycle: 3.8s ease-in-out — offset from fill so they
+     never peak at the exact same moment.
+   ════════════════════════════════════════════════════════════ */
+.progress i.has-progress {
+  animation: pb-fill-breathe 4.5s ease-in-out infinite;
+}
+
+@keyframes pb-fill-breathe {
+  0%, 100% {
+    filter: brightness(1.0);
+    box-shadow: none;
+  }
+  50% {
+    filter: brightness(1.13);
+    box-shadow: 0 0 5px 0px color-mix(in srgb, var(--brand) 28%, transparent);
+  }
+}
+
+.progress i.has-progress::before {
+  display: block;
+  opacity: 0.82;
+  animation: pb-dot-breathe 4s ease-in-out infinite;
+}
+
+@keyframes pb-dot-breathe {
+  0%, 100% {
+    opacity: 0.82;
+    box-shadow:
+      0 0 0 2px color-mix(in srgb, var(--brand) 12%, transparent),
+      0 0 4px 1px color-mix(in srgb, var(--brand) 16%, transparent);
+  }
+  50% {
+    opacity: 0.92;
+    box-shadow:
+      0 0 0 2px color-mix(in srgb, var(--brand) 16%, transparent),
+      0 0 6px 1px color-mix(in srgb, var(--brand) 22%, transparent);
+  }
+}
+
+/* ── Completion pop — brief endpoint emphasis on task complete
+   .just-advanced overrides the idle dot animation momentarily.
+   JS removes this class after animationend fires.
+   ─────────────────────────────────────────────────────────── */
+.progress i.just-advanced::before {
+  animation: pb-dot-pop 0.65s var(--ease-smooth) forwards;
+}
+
+@keyframes pb-dot-pop {
+  0% {
+    opacity: 0.85;
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--brand) 18%, transparent),
+                0 0 5px 1px color-mix(in srgb, var(--brand) 28%, transparent);
+  }
+  30% {
+    opacity: 1;
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--brand) 14%, transparent),
+                0 0 9px 2px color-mix(in srgb, var(--brand) 22%, transparent);
+  }
+  100% {
+    opacity: 0.85;
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--brand) 18%, transparent),
+                0 0 5px 1px color-mix(in srgb, var(--brand) 28%, transparent);
+  }
+}
+
+/* ════════════════════════════════════════════════════════════
+   STATE 100% — calm, completed, "Done."
+   .complete has higher specificity than .has-progress so it
+   cleanly overrides both fill breathing and dot animation.
+   One-shot settle glow fires once, then bar is fully static.
+   ════════════════════════════════════════════════════════════ */
+.progress i.complete {
+  background: var(--brand);
+  filter: none;
+  animation: pb-complete-settle 1.6s var(--ease-smooth) forwards;
+}
+
+.progress i.complete::after {
+  /* Static shine only — no animation */
+  animation: none;
+}
+
+.progress i.complete::before {
+  /* Endpoint dot hidden — whole bar communicates completion */
+  display: none;
+}
+
+@keyframes pb-complete-settle {
+  0%   { box-shadow: none; }
+  40%  {
+    box-shadow:
+      0 0 0 2px color-mix(in srgb, var(--brand) 20%, transparent),
+      0 0 8px 1px color-mix(in srgb, var(--brand) 14%, transparent);
+  }
+  100% { box-shadow: none; }
+}
+
+/* ── Reduced motion ───────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .progress i.has-progress {
+    animation: none;
+    filter: none;
+  }
+  .progress i.has-progress::before {
+    animation: none;
+  }
+  .progress i.complete {
+    animation: none;
+  }
+}
+
+/* ============================================================
+   TASK LIST
+   ============================================================ */
+.tasks {
+  display: grid;
+  gap: var(--space-2);
+}
+
+/* ============================================================
+   TASK CARD
+   ============================================================ */
+.task {
+  display: grid;
+  grid-template-columns: auto auto 1fr auto;
+  gap: var(--space-2) var(--space-3);
+  align-items: center;
+  padding: var(--space-3) var(--space-4);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  /* Priority indicator — inline-start for RTL = right edge */
+  border-inline-start: 3px solid var(--priority-normal);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  touch-action: pan-y;
+  direction: rtl;
+  will-change: transform;
+  transition:
+    border-color var(--duration-base) var(--ease-smooth),
+    box-shadow var(--duration-base) var(--ease-smooth),
+    opacity var(--duration-base) var(--ease-smooth),
+    background var(--duration-base) var(--ease-smooth),
+    transform var(--duration-fast) var(--ease-out);
+}
+
+.task:hover {
+  border-color: var(--line-strong);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+/* Priority stripe colors */
+.task.priority-high {
+  border-inline-start-color: var(--priority-high);
+}
+
+.task.priority-medium {
+  border-inline-start-color: var(--priority-medium);
+}
+
+.task.priority-normal {
+  border-inline-start-color: transparent;
+}
+
+/* Completed state */
+.task.done {
+  opacity: 0.6;
+  background: var(--bg-subtle);
+  border-inline-start-color: transparent;
+  box-shadow: none;
+  transform: none;
+}
+
+.task.done:hover {
+  opacity: 0.78;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Completion animation */
+.task.just-completed {
+  animation: task-complete 0.4s var(--ease-smooth) forwards;
+}
+
+.task.just-completed .task-text {
+  animation: title-complete 0.3s var(--ease-smooth) 0.08s forwards;
+}
+
+@keyframes task-complete {
+  0% {
+    background: color-mix(in srgb, var(--success-soft) 70%, var(--panel));
+    opacity: 1;
+  }
+  50% {
+    background: color-mix(in srgb, var(--success-soft) 90%, var(--panel));
+  }
+  100% {
+    background: var(--bg-subtle);
+    opacity: 0.6;
+  }
+}
+
+@keyframes title-complete {
+  from {
+    color: var(--ink);
+    text-decoration-color: transparent;
+  }
+  to {
+    color: var(--muted);
+    text-decoration-color: color-mix(in srgb, var(--muted) 60%, transparent);
+  }
+}
+
+/* Entry animation for newly added tasks */
+@keyframes task-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Drag states */
+.task.drag-source {
+  display: none;
+}
+
+.task.drag-floating {
+  position: fixed;
+  z-index: 20;
+  margin: 0;
+  pointer-events: none;
+  opacity: 0.97;
+  box-shadow: var(--shadow-lg);
+  transform: scale(1.015) rotate(0.5deg);
+  transform-origin: center;
+  transition:
+    left 0.08s ease-out,
+    top 0.08s ease-out;
+}
+
+.task-placeholder {
+  position: relative;
+  min-height: 60px;
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--brand-soft) 60%, transparent);
+  border: 2px dashed color-mix(in srgb, var(--brand) 35%, transparent);
+  transition: height var(--duration-base) var(--ease-smooth);
+}
+
+/* ============================================================
+   CHECKBOX / CHECK BUTTON
+   ============================================================ */
+.check {
+  position: relative;
+  isolation: isolate;
+  width: var(--touch-min);
+  height: var(--touch-min);
+  margin: -6px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: #fff;
+  padding: 0;
+  line-height: 1;
+  flex-shrink: 0;
+  font-size: 13px;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+  transition: transform var(--duration-fast) var(--ease-smooth);
+}
+
+/* The visual ring */
+.check::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 24px;
+  height: 24px;
+  margin: auto;
+  border: 2px solid var(--line-strong);
+  border-radius: var(--radius-full);
+  background: var(--panel);
+  box-sizing: border-box;
+  transition:
+    background var(--duration-base) var(--ease-smooth),
+    border-color var(--duration-base) var(--ease-smooth),
+    transform var(--duration-slow) var(--ease-smooth);
+}
+
+.check:hover::before {
+  border-color: var(--brand);
+  background: color-mix(in srgb, var(--brand-soft) 60%, var(--panel));
+}
+
+.check:active {
+  transform: scale(0.92);
+}
+
+.check:active::before {
+  transform: scale(0.88);
+}
+
+/* Done state — emerald fill */
+.check.done::before {
+  background: var(--brand);
+  border-color: var(--brand);
+}
+
+/* Pop animation on completion */
+.task.just-completed .check.done::before {
+  animation: check-pop 0.36s var(--ease-smooth);
+}
+
+@keyframes check-pop {
+  0%   { transform: scale(0.7); }
+  55%  { transform: scale(1.15); }
+  80%  { transform: scale(0.96); }
+  100% { transform: scale(1); }
+}
+
+.check.done {
+  text-shadow: 0 1px 1px rgb(0 0 0 / 0.15);
+}
+
+/* ============================================================
+   TASK BODY
+   ============================================================ */
+.task-body {
+  min-width: 0;
+  align-self: center;
+  direction: rtl;
+  text-align: right;
+}
+
+.task-text {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  direction: rtl;
+  text-align: right;
+  unicode-bidi: isolate;
+  padding: 0;
+  word-break: break-word;
+  white-space: pre-wrap;
+  line-height: 1.45;
+  border-radius: var(--radius-xs);
+  transition:
+    color var(--duration-base) var(--ease-smooth),
+    text-decoration-color var(--duration-base) var(--ease-smooth);
+}
+
+.task-text:hover {
+  color: var(--brand);
+}
+
+.task.done .task-text {
+  color: var(--muted);
+  font-weight: 400;
+  text-decoration: line-through;
+  text-decoration-color: color-mix(in srgb, var(--muted) 60%, transparent);
+}
+
+/* ============================================================
+   TASK META / CHIPS
+   ============================================================ */
+.task-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 5px;
+  margin-top: 5px;
+  direction: rtl;
+}
+
+.meta-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  color: var(--muted);
+  padding: 2px 7px;
+  border-radius: var(--radius-full);
+  background: var(--bg-subtle);
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+}
+
+/* Overdue */
+.meta-chip.late {
+  color: var(--danger);
+  background: var(--danger-soft);
+  font-weight: 600;
+}
+
+/* Due soon */
+.meta-chip.soon {
+  color: var(--warning);
+  background: var(--warning-soft);
+  font-weight: 600;
+}
+
+/* Due today — emerald */
+.meta-chip.today {
+  color: var(--brand);
+  background: var(--brand-soft);
+  font-weight: 600;
+}
+
+/* Priority chips — subtle */
+.meta-chip.priority-high {
+  color: var(--priority-high);
+  background: color-mix(in srgb, var(--priority-high) 10%, var(--panel));
+}
+
+.meta-chip.priority-medium {
+  color: var(--priority-medium);
+  background: color-mix(in srgb, var(--priority-medium) 10%, var(--panel));
+}
+
+.meta-chip.priority-normal {
+  display: none; /* Don't clutter UI with redundant "normal" labels */
+}
+
+/* ============================================================
+   DRAG HANDLE
+   ============================================================ */
+.drag-handle {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1;
+  min-width: 32px;
+  min-height: var(--touch-min);
+  padding: 4px;
+  margin: -4px;
+  cursor: grab;
+  touch-action: none;
+  border-radius: var(--radius-sm);
+  opacity: 0.35;
+  transition:
+    opacity var(--transition),
+    color var(--transition);
+}
+
+.task:hover .drag-handle,
+.drag-handle:focus-visible {
+  opacity: 0.7;
+}
+
+.drag-handle:hover {
+  opacity: 1;
+  color: var(--ink-secondary);
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+/* ============================================================
+   DELETE BUTTON
+   ============================================================ */
+.task-delete {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  width: var(--touch-min);
+  height: var(--touch-min);
+  border-radius: var(--radius-sm);
+  display: grid;
+  place-items: center;
+  opacity: 1;
+  flex-shrink: 0;
+  transition:
+    opacity var(--transition),
+    background var(--transition),
+    color var(--transition);
+}
+
+.task-delete:hover {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.task-delete svg {
+  width: 16px;
+  height: 16px;
+  stroke-width: 1.75;
+}
+
+.task.done .drag-handle {
+  opacity: 0.4;
+}
+
+.task.done .task-delete {
+  opacity: 0.5;
+}
+
+/* ============================================================
+   EMPTY STATE
+   ============================================================ */
+.empty {
+  text-align: center;
+  padding: var(--space-10) var(--space-6);
+  background: var(--panel);
+  border: 1.5px dashed var(--line);
+  border-radius: var(--radius-lg);
+}
+
+.empty-icon {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  margin: 0 auto var(--space-4);
+  border-radius: var(--radius-full);
+  background: var(--brand-soft);
+  color: var(--brand);
+  font-size: 22px;
+}
+
+.empty-title {
+  display: block;
+  color: var(--ink);
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  margin: 0 0 var(--space-2);
+  letter-spacing: -0.01em;
+}
+
+.empty-desc {
+  display: block;
+  color: var(--muted);
+  font-size: var(--font-size-sm);
+  max-width: 30em;
+  margin: 0 auto var(--space-6);
+  line-height: 1.6;
+}
+
+.empty-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  justify-content: center;
+}
+
+/* ============================================================
+   MOBILE NAV — hidden by default
+   ============================================================ */
+.mobile-nav {
+  display: none;
+}
+
+/* ============================================================
+   MODAL / ADVANCED ADD
+   ============================================================ */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgb(10 12 11 / 0.65);
+  padding: var(--space-5);
+  z-index: 50;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  animation: fade-in var(--duration-base) var(--ease-out);
+}
+
+.modal-backdrop[hidden] {
+  display: none !important;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.modal {
+  width: min(100%, 440px);
+  max-height: min(90vh, 640px);
+  overflow: auto;
+  background: var(--panel-elevated);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-lg);
+  animation: slide-up 0.22s var(--ease-smooth);
+  direction: rtl;
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modal h2 {
+  margin: 0 0 var(--space-5);
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+/* Form fields */
+.field {
+  display: grid;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.field-row .field {
+  margin-bottom: 0;
+}
+
+.field label {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--ink-secondary);
+}
+
+.field input,
+.field select {
+  width: 100%;
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--bg-subtle);
+  padding: 11px var(--space-3);
+  font-size: var(--font-size-base);
+  color: var(--ink);
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition),
+    background var(--transition);
+}
+
+.field input:not([type="date"]),
+.field select {
+  direction: rtl;
+  text-align: right;
+}
+
+.field input[type="date"] {
+  direction: ltr;
+  text-align: right;
+}
+
+.field input:hover,
+.field select:hover {
+  border-color: var(--line-strong);
+}
+
+.field input:focus,
+.field select:focus {
+  border-color: var(--brand-muted);
+  background: var(--panel);
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 12%, transparent);
+}
+
+/* Modal action bar */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  margin-top: var(--space-6);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--line);
+}
+
+.modal-actions .cancel {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: var(--font-size-sm);
+  padding: 10px 14px;
+}
+
+.modal-actions .cancel:hover {
+  color: var(--ink);
+  background: var(--bg-subtle);
+  border-radius: var(--radius-sm);
+}
+
+/* ============================================================
+   TOAST NOTIFICATIONS
+   ============================================================ */
+.toast-stack {
+  position: fixed;
+  bottom: calc(var(--space-5) + env(safe-area-inset-bottom));
+  inset-inline: var(--space-4);
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  pointer-events: none;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  background: var(--ink);
+  color: #fff;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  pointer-events: auto;
+  animation: toast-in 0.22s var(--ease-smooth);
+  max-width: min(100%, 400px);
+}
+
+:root[data-theme="dark"] .toast {
+  background: var(--panel-elevated);
+  color: var(--ink);
+  border: 1px solid var(--line-strong);
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.toast-action {
+  border: 0;
+  background: transparent;
+  color: var(--brand-muted);
+  font-weight: 700;
+  font-size: var(--font-size-sm);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-xs);
+  flex-shrink: 0;
+  transition: background var(--transition);
+}
+
+:root[data-theme="dark"] .toast-action {
+  color: var(--brand-bright);
+}
+
+.toast-action:hover {
+  background: rgb(255 255 255 / 0.14);
+}
+
+:root[data-theme="dark"] .toast-action:hover {
+  background: color-mix(in srgb, var(--brand) 15%, transparent);
+}
+
+/* ============================================================
+   RESPONSIVE — MOBILE (≤ 720px)
+   ============================================================ */
+@media (max-width: 720px) {
+  .app {
+    display: block;
+    padding: var(--space-5) var(--space-4) calc(84px + env(safe-area-inset-bottom));
+  }
+
+  .side {
+    display: none;
+  }
+
+  main {
+    max-width: none;
+  }
+
+  /* Show filters inline on mobile */
+  .filters {
+    display: flex;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-2);
+  }
+
+  .search-wrap {
+    max-width: none;
+    margin-inline-start: 0;
+  }
+
+  .capture {
+    box-shadow: var(--shadow-md);
+  }
+
+  .capture input {
+    padding-inline: var(--space-2) var(--space-3);
+    font-size: var(--font-size-base);
+  }
+
+  .capture .btn-primary {
+    padding-inline: 14px;
+    font-size: var(--font-size-sm);
+  }
+
+  .top {
+    margin-bottom: var(--space-4);
+  }
+
+  .subtitle {
+    font-size: var(--font-size-sm);
+  }
+
+  /* Always show delete on mobile (no hover) */
+  .task-delete {
+    opacity: 1;
+  }
+
+  .task {
+    grid-template-columns: auto auto minmax(0, 1fr) auto;
+    gap: var(--space-2);
+    padding: var(--space-3);
+    padding-inline: var(--space-3);
+    /* Prevent lift on mobile — less distracting */
+    transform: none !important;
+  }
+
+  .task-text {
+    font-size: 14px;
+  }
+
+  .drag-handle {
+    opacity: 0.6;
+  }
+
+  /* MOBILE NAVIGATION */
+  .mobile-nav {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    position: fixed;
+    z-index: 40;
+    bottom: 0;
+    inset-inline: 0;
+    padding: var(--space-2) var(--space-3) calc(var(--space-2) + env(safe-area-inset-bottom));
+    background: color-mix(in srgb, var(--panel) 92%, transparent);
+    border-top: 1px solid var(--line);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  .mobile-nav button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    min-height: 50px;
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+    font-size: var(--font-size-xs);
+    font-weight: 500;
+    padding: var(--space-1);
+    border-radius: var(--radius-sm);
+    transition:
+      color var(--transition),
+      background var(--transition);
+  }
+
+  .mobile-nav button .nav-icon {
+    font-size: 19px;
+    line-height: 1;
+  }
+
+  .mobile-nav button .nav-text {
+    line-height: 1.2;
+  }
+
+  /* Active mobile nav item — emerald */
+  .mobile-nav button.active {
+    color: var(--brand);
+    background: color-mix(in srgb, var(--brand-soft) 70%, transparent);
+  }
+
+  .mobile-nav .count {
+    display: none;
+  }
+
+  .toast-stack {
+    bottom: calc(70px + env(safe-area-inset-bottom));
+  }
+
+  .empty {
+    padding: var(--space-8) var(--space-4);
+  }
+}
+
+/* ============================================================
+   RESPONSIVE — DESKTOP (> 720px)
+   ============================================================ */
+@media (min-width: 721px) {
+  .toolbar .filters {
+    display: none;
+  }
+}
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  /* Progress-specific: fully disable decorative animations */
+  .progress i::after {
+    animation: none !important;
+  }
+
+  .progress i::before {
+    animation: none !important;
+    /* keep a static dot, no pulse */
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--brand) 18%, transparent) !important;
+  }
+
+  .progress i.complete {
+    animation: none !important;
+    box-shadow: none !important;
+  }
+
+  .progress-value {
+    transition: none !important;
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "مهامي",
+  "short_name": "مهامي",
+  "description": "تطبيق مهامي الشخصي",
+  "start_url": "./TO-DO.html",
+  "display": "standalone",
+  "background_color": "#0E0F0F",
+  "theme_color": "#35B98A",
+  "dir": "rtl",
+  "lang": "ar",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

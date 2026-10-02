@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#35B98A" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <meta name="description" content="تطبيق مهامي الشخصي" />
+    <link rel="manifest" href="manifest.json" />
+    <title>مهامي</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">تخطي إلى المحتوى</a>
+    <div class="app">
+      <aside class="side" aria-label="التنقل الجانبي">
+        <div class="brand">
+          <span class="logo" aria-hidden="true">✓</span>
+          <span class="brand-name">مهامي</span>
+        </div>
+        <h2 class="side-heading">المشاهدة</h2>
+        <nav class="nav" id="side-nav" aria-label="قوائم المهام"></nav>
+        <h2 class="side-heading">الأولوية</h2>
+        <div class="priority-nav" id="priorities" role="group" aria-label="تصفية حسب الأولوية"></div>
+        <div class="side-actions">
+          <button type="button" class="btn-ghost btn-sm" id="export">تصدير</button>
+          <button type="button" class="btn-ghost btn-sm" id="import-button">استيراد</button>
+          <input
+            id="import-file"
+            type="file"
+            accept="application/json"
+            hidden
+          />
+        </div>
+      </aside>
+      <main id="main-content">
+        <header class="top">
+          <div class="top-intro">
+            <p class="eyebrow" id="date-label"></p>
+            <h1 class="title" id="page-title">اليوم</h1>
+            <p class="subtitle" id="summary"></p>
+          </div>
+          <div class="top-actions">
+            <button
+              type="button"
+              class="icon-button icon-button--accent"
+              id="advanced-add"
+              aria-label="إضافة مهمة بتفاصيل"
+              title="مهمة بتفاصيل (موعد، أولوية، تكرار)"
+            >
+              <span aria-hidden="true">＋</span>
+            </button>
+            <button
+              type="button"
+              class="icon-button"
+              id="theme"
+              aria-label="تغيير المظهر"
+              title="المظهر"
+            >
+              <span id="theme-icon" aria-hidden="true">☾</span>
+            </button>
+            <button
+              type="button"
+              class="icon-button"
+              id="install"
+              aria-label="تثبيت التطبيق"
+              title="تثبيت"
+              hidden
+            >
+              <span aria-hidden="true">↓</span>
+            </button>
+          </div>
+        </header>
+
+        <form class="capture" id="capture" aria-label="إضافة مهمة سريعة">
+          <label class="visually-hidden" for="quick-text">مهمة جديدة</label>
+          <input
+            id="quick-text"
+            autocomplete="off"
+            dir="rtl"
+            placeholder="للإضافة السريعة… اكتب مهمة واضغط Enter"
+            enterkeyhint="done"
+          />
+          <button type="submit" class="btn-primary">إضافة</button>
+        </form>
+
+        <div class="toolbar">
+          <div
+            class="filters"
+            id="filters"
+            role="tablist"
+            aria-label="تصفية المهام"
+          ></div>
+          <label class="search-wrap">
+            <span class="visually-hidden">بحث في المهام</span>
+            <input
+              class="search"
+              id="search"
+              type="search"
+              dir="rtl"
+              placeholder="بحث…"
+              title="اختصار لوحة المفاتيح: /"
+              autocomplete="off"
+            />
+          </label>
+        </div>
+
+        <div class="progress-block" id="progress-block" hidden>
+          <div class="progress-meta">
+            <span class="progress-label" id="progress-label">تقدم اليوم</span>
+            <span class="progress-value" id="progress-value"></span>
+          </div>
+          <div
+            class="progress"
+            role="progressbar"
+            id="progress-bar"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-valuenow="0"
+            aria-labelledby="progress-label"
+          >
+            <i id="progress"></i>
+          </div>
+        </div>
+
+        <section class="tasks" id="tasks" aria-live="polite" aria-label="قائمة المهام"></section>
+      </main>
+    </div>
+
+    <nav class="mobile-nav" id="mobile-nav" aria-label="التنقل الرئيسي"></nav>
+
+    <div
+      class="modal-backdrop"
+      id="modal-backdrop"
+      hidden
+      aria-hidden="true"
+    >
+      <form
+        class="modal"
+        id="task-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+      >
+        <h2 id="modal-title">مهمة جديدة</h2>
+        <div class="field">
+          <label for="task-text">المهمة</label>
+          <input id="task-text" required autocomplete="off" dir="rtl" />
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="task-due">الموعد</label>
+            <input id="task-due" type="date" />
+          </div>
+          <div class="field">
+            <label for="task-priority">الأولوية</label>
+            <select id="task-priority">
+              <option value="normal">عادية</option>
+              <option value="medium">متوسطة</option>
+              <option value="high">مهمة</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="task-repeat">التكرار</label>
+          <select id="task-repeat">
+            <option value="">بدون تكرار</option>
+            <option value="daily">يومياً</option>
+            <option value="weekly">أسبوعياً</option>
+            <option value="monthly">شهرياً</option>
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button class="btn-secondary cancel" type="button" id="close-modal">
+            إلغاء
+          </button>
+          <button class="btn-primary" type="submit" id="save-task">
+            حفظ المهمة
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="toast-stack" id="toast-stack" aria-live="assertive" aria-atomic="true"></div>
+
+    <div id="status-announcer" class="visually-hidden" aria-live="polite"></div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
