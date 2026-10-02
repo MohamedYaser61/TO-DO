@@ -47,22 +47,22 @@
       </aside>
       <main id="main-content">
         <header class="top">
+          <button
+            type="button"
+            class="icon-button drawer-trigger"
+            id="drawer-trigger"
+            aria-label="فتح القائمة"
+            aria-controls="sidebar"
+            aria-expanded="false"
+          >
+            <span aria-hidden="true">☰</span>
+          </button>
           <div class="top-intro">
             <p class="eyebrow" id="date-label"></p>
             <h1 class="title" id="page-title">اليوم</h1>
             <p class="subtitle" id="summary"></p>
           </div>
           <div class="top-actions">
-            <button
-              type="button"
-              class="icon-button drawer-trigger"
-              id="drawer-trigger"
-              aria-label="فتح القائمة"
-              aria-controls="sidebar"
-              aria-expanded="false"
-            >
-              <span aria-hidden="true">☰</span>
-            </button>
             <button
               type="button"
               class="icon-button icon-button--accent"
@@ -113,18 +113,6 @@
             role="tablist"
             aria-label="تصفية المهام"
           ></div>
-          <label class="search-wrap">
-            <span class="visually-hidden">بحث في المهام</span>
-            <input
-              class="search"
-              id="search"
-              type="search"
-              dir="rtl"
-              placeholder="بحث…"
-              title="اختصار لوحة المفاتيح: /"
-              autocomplete="off"
-            />
-          </label>
         </div>
 
         <div class="progress-block" id="progress-block" hidden>

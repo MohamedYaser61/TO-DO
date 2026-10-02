@@ -49,7 +49,6 @@ let stored = JSON.parse(localStorage.getItem(KEY) || "null"),
     : stored || defaults,
   view = "today",
   activePriority = "all",
-  search = "",
   deferredInstall,
   lastCompletedId = null;
 data.tasks = data.tasks || [];
@@ -192,16 +191,6 @@ function dueMeta(t) {
 }
 
 function emptyStateHtml() {
-  if (search) {
-    return `<div class="empty" role="status">
-      <span class="empty-icon" aria-hidden="true">⌕</span>
-      <strong class="empty-title">لا توجد نتائج</strong>
-      <span class="empty-desc">جرّب كلمة مختلفة أو امسح البحث لعرض كل المهام في هذا القسم.</span>
-      <div class="empty-actions">
-        <button type="button" class="btn-secondary" id="empty-clear-search">مسح البحث</button>
-      </div>
-    </div>`;
-  }
   const hints = {
     today: "المهام المستحقة اليوم أو قبل ذلك تظهر هنا. أضف مهمة وحدّد موعداً إن لزم.",
     upcoming: "المهام ذات موعد لاحق تظهر هنا — خطّط قبل الموعد.",
@@ -220,12 +209,6 @@ function emptyStateHtml() {
 }
 
 function bindEmptyActions() {
-  $("#empty-clear-search")?.addEventListener("click", () => {
-    $("#search").value = "";
-    search = "";
-    render();
-    $("#search").focus();
-  });
   $("#empty-focus-add")?.addEventListener("click", () => {
     $("#quick-text").focus();
   });
@@ -237,8 +220,6 @@ function render() {
   const now = today(),
     list = data.tasks.filter((t) => {
       if (activePriority !== "all" && t.priority !== activePriority)
-        return false;
-      if (search && !t.text.toLowerCase().includes(search.toLowerCase()))
         return false;
       if (view === "today")
         return !t.done ? t.due <= now : t.due === now;
@@ -265,7 +246,7 @@ function render() {
     dailyDone = daily.filter((t) => t.done).length,
     dailyOpen = daily.length - dailyDone;
   const showProgress =
-    daily.length && view === "today" && activePriority === "all" && !search;
+    daily.length && view === "today" && activePriority === "all";
   $("#summary").textContent = showProgress
     ? dailyOpen > 0
       ? `${dailyOpen} ${dailyOpen === 1 ? "مهمة متبقية" : "مهام متبقية"} لليوم`
@@ -639,11 +620,6 @@ $("#tasks").addEventListener("click", (e) => {
     openModal(data.tasks.find((t) => t.id === edit.dataset.editId));
 });
 
-$("#search").oninput = (e) => {
-  search = e.target.value;
-  render();
-};
-
 function setTheme(next) {
   data.theme = next;
   document.documentElement.dataset.theme = next;
@@ -664,19 +640,6 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Escape" && !$("#modal-backdrop").hidden) {
     e.preventDefault();
     closeModal();
-  }
-  const inField =
-    e.target.matches("input, textarea, select") ||
-    e.target.isContentEditable;
-  if (
-    e.key === "/" &&
-    !inField &&
-    !e.metaKey &&
-    !e.ctrlKey &&
-    !e.altKey
-  ) {
-    e.preventDefault();
-    $("#search").focus();
   }
 });
 
