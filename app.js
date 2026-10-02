@@ -354,18 +354,6 @@ function render() {
     ? list.map(taskHtml).join("")
     : emptyStateHtml();
   bindEmptyActions();
-  document.querySelectorAll(".check").forEach((b) => {
-    b.onclick = () => toggle(b.dataset.id);
-  });
-  document.querySelectorAll(".task-delete").forEach((b) => {
-    b.onclick = (e) => {
-      e.stopPropagation();
-      remove(b.dataset.id);
-    };
-  });
-  document.querySelectorAll(".drag-handle").forEach((b) => {
-    b.onpointerdown = (e) => startDrag(e, b.closest(".task"));
-  });
   if (lastCompletedId) {
     const card = document.querySelector(`.task[data-id="${lastCompletedId}"]`);
     if (card) card.classList.add("just-completed");
@@ -415,99 +403,154 @@ function escape(s) {
 
 function startDrag(event, task) {
   event.preventDefault();
-  const handle = event.currentTarget,
+  const handle = event.target.closest(".drag-handle") || event.currentTarget,
     container = $("#tasks"),
     rect = task.getBoundingClientRect(),
     placeholder = document.createElement("div"),
     floating = task.cloneNode(true),
     pointerId = event.pointerId,
-    offsetX = event.clientX - rect.left,
-    offsetY = event.clientY - rect.top;
+    initialX = event.clientX,
+    initialY = event.clientY,
+    initialScrollY = window.scrollY;
+
   placeholder.className = "task-placeholder";
   placeholder.style.height = rect.height + "px";
+
   floating.className = task.className + " drag-floating";
   floating.style.width = rect.width + "px";
   floating.style.left = rect.left + "px";
   floating.style.top = rect.top + "px";
+  floating.style.margin = "0";
+
   document.body.appendChild(floating);
   container.insertBefore(placeholder, task);
   task.classList.add("drag-source");
   handle.setAttribute("aria-pressed", "true");
+
   try {
     handle.setPointerCapture(pointerId);
   } catch {}
-  const animateMove = (action) => {
-    const before = new Map(
-      [...container.querySelectorAll(".task")].map((card) => [
-        card,
-        card.getBoundingClientRect(),
-      ]),
-    );
-    action();
-    [...container.querySelectorAll(".task")].forEach((card) => {
-      const old = before.get(card);
-      if (!old) return;
-      const next = card.getBoundingClientRect(),
-        dx = old.left - next.left,
-        dy = old.top - next.top;
-      if (dx || dy) {
-        card.style.transition = "none";
-        card.style.transform = `translate(${dx}px,${dy}px)`;
-        requestAnimationFrame(() => {
-          card.style.transition =
-            "transform .22s cubic-bezier(.22,.61,.36,1)";
-          card.style.transform = "";
-        });
+
+  const allCards = [...container.querySelectorAll(".task")];
+  const gapIndex = allCards.indexOf(task);
+  const cards = allCards.filter((c) => c !== task);
+
+  const cache = cards.map((c, index) => {
+    const box = c.getBoundingClientRect();
+    return {
+      card: c,
+      midY: box.top + window.scrollY + box.height / 2,
+      height: box.height,
+      index: index,
+    };
+  });
+
+  const dragHeight = rect.height + 8; // var(--space-2) gap
+
+  cards.forEach((c) => {
+    c.style.transition = "transform .22s cubic-bezier(.22,.61,.36,1)";
+  });
+  placeholder.style.transition = "transform .22s cubic-bezier(.22,.61,.36,1)";
+
+  let rafPending = false;
+  let currentX = initialX;
+  let currentY = initialY;
+  let lastTargetIndex = gapIndex;
+
+  const processDragFrame = () => {
+    rafPending = false;
+
+    if (currentY < 90) window.scrollBy(0, -10);
+    else if (currentY > window.innerHeight - 90) window.scrollBy(0, 10);
+
+    const scrollDelta = window.scrollY - initialScrollY;
+    const dx = currentX - initialX;
+    const dy = currentY - initialY + scrollDelta;
+
+    floating.style.transform = `translate3d(${dx}px, ${dy}px, 0) scale(1.015) rotate(0.5deg)`;
+
+    const absoluteY = currentY + window.scrollY;
+    let targetIndex = cache.length;
+    for (let i = 0; i < cache.length; i++) {
+      if (absoluteY < cache[i].midY) {
+        targetIndex = i;
+        break;
       }
-    });
-  };
-  const move = (e) => {
-    floating.style.left = e.clientX - offsetX + "px";
-    floating.style.top = e.clientY - offsetY + "px";
-    if (e.clientY < 90) window.scrollBy(0, -10);
-    else if (e.clientY > window.innerHeight - 90) window.scrollBy(0, 10);
-    const cards = [...container.querySelectorAll(".task")].filter(
-        (card) => card !== task,
-      ),
-      last = cards[cards.length - 1];
-    if (last && e.clientY > last.getBoundingClientRect().bottom) {
-      if (placeholder.nextElementSibling)
-        animateMove(() => container.appendChild(placeholder));
-      return;
     }
-    const before = cards.find((card) => {
-      const box = card.getBoundingClientRect();
-      return e.clientY < box.top + box.height / 2;
-    });
-    if (before && placeholder.nextElementSibling !== before)
-      animateMove(() => container.insertBefore(placeholder, before));
-    else if (!before && placeholder !== container.lastElementChild)
-      animateMove(() => container.appendChild(placeholder));
+
+    if (targetIndex !== lastTargetIndex) {
+      lastTargetIndex = targetIndex;
+      let placeholderShift = 0;
+
+      cache.forEach((item) => {
+        const i = item.index;
+        let shift = 0;
+
+        if (i < gapIndex && i >= targetIndex) {
+          shift = dragHeight;
+          placeholderShift -= item.height + 8;
+        } else if (i >= gapIndex && i < targetIndex) {
+          shift = -dragHeight;
+          placeholderShift += item.height + 8;
+        }
+
+        item.card.style.transform = shift ? `translate3d(0, ${shift}px, 0)` : "";
+      });
+
+      placeholder.style.transform = placeholderShift
+        ? `translate3d(0, ${placeholderShift}px, 0)`
+        : "";
+    }
   };
+
+  const move = (e) => {
+    currentX = e.clientX;
+    currentY = e.clientY;
+    if (!rafPending) {
+      rafPending = true;
+      requestAnimationFrame(processDragFrame);
+    }
+  };
+
   const end = () => {
     handle.removeEventListener("pointermove", move);
     handle.removeEventListener("pointerup", end);
     handle.removeEventListener("pointercancel", end);
-    container.insertBefore(task, placeholder);
+
+    cards.forEach((c) => {
+      c.style.transition = "";
+      c.style.transform = "";
+    });
+    placeholder.style.transition = "";
+    placeholder.style.transform = "";
+
+    if (lastTargetIndex < cache.length) {
+      container.insertBefore(task, cache[lastTargetIndex].card);
+    } else {
+      container.appendChild(task);
+    }
+
     placeholder.remove();
     floating.remove();
     task.classList.remove("drag-source");
     handle.setAttribute("aria-pressed", "false");
-    const visibleIds = [...container.querySelectorAll(".task")].map(
-        (x) => x.dataset.id,
-      ),
-      visibleSet = new Set(visibleIds),
-      reorderedVisible = visibleIds.map((taskId) =>
-        data.tasks.find((t) => t.id === taskId),
-      );
+
+    const visibleIds = [...container.querySelectorAll(".task")].map((x) => x.dataset.id);
+    const visibleSet = new Set(visibleIds);
+    const reorderedVisible = visibleIds.map((taskId) =>
+      data.tasks.find((t) => t.id === taskId)
+    );
+
     let next = 0;
     data.tasks = data.tasks.map((t) =>
-      visibleSet.has(t.id) ? reorderedVisible[next++] : t,
+      visibleSet.has(t.id) ? reorderedVisible[next++] : t
     );
+
     data.manualOrder = true;
     save();
     render();
   };
+
   handle.addEventListener("pointermove", move);
   handle.addEventListener("pointerup", end);
   handle.addEventListener("pointercancel", end);
@@ -644,9 +687,28 @@ $("#task-modal").onsubmit = (e) => {
 };
 
 $("#tasks").addEventListener("click", (e) => {
+  const check = e.target.closest(".check");
+  if (check) {
+    toggle(check.dataset.id);
+    return;
+  }
+  const del = e.target.closest(".task-delete");
+  if (del) {
+    e.stopPropagation();
+    remove(del.dataset.id);
+    return;
+  }
   const edit = e.target.closest("[data-edit-id]");
-  if (edit)
+  if (edit) {
     openModal(data.tasks.find((t) => t.id === edit.dataset.editId));
+  }
+});
+
+$("#tasks").addEventListener("pointerdown", (e) => {
+  const handle = e.target.closest(".drag-handle");
+  if (handle) {
+    startDrag(e, handle.closest(".task"));
+  }
 });
 
 function setTheme(next) {

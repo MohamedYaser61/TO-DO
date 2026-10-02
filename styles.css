@@ -997,8 +997,7 @@ main {
   transform: scale(1.015) rotate(0.5deg);
   transform-origin: center;
   transition:
-    left 0.08s ease-out,
-    top 0.08s ease-out;
+    transform 0.08s ease-out;
 }
 
 .task-placeholder {
