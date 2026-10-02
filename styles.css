@@ -857,16 +857,30 @@ main {
 }
 
 /* Drag states */
-.task.drag-active {
+.task.dragging {
   z-index: 20;
   box-shadow: var(--shadow-lg);
-  pointer-events: none;
+  cursor: grabbing;
 }
 
-.drag-floating {
+#task-drop-indicator {
   position: fixed;
-  z-index: 100;
+  top: 0;
+  z-index: 30;
+  height: 2px;
+  border-radius: var(--radius-full);
+  background: var(--brand);
+  box-shadow: 0 0 0 3px var(--brand-soft);
   pointer-events: none;
+  transform: translate3d(0, 0, 0);
+}
+
+#task-drop-indicator[hidden] {
+  display: none;
+}
+
+.task.dragging {
+  transition: none !important;
 }
 
 /* ============================================================
@@ -1539,7 +1553,7 @@ main {
     padding-inline: var(--space-3);
   }
 
-  .task:not(.drag-floating) {
+  .task:not(.dragging) {
     /* Prevent lift on mobile — less distracting */
     transform: none !important;
   }
