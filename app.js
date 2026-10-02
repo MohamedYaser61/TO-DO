@@ -71,6 +71,30 @@ data.tasks = data.tasks.map((task, index, tasks) => {
   return { ...task, createdAt };
 });
 const $ = (s) => document.querySelector(s),
+  ui = {
+    sideNav: $("#side-nav"),
+    priorities: $("#priorities"),
+    pageTitle: $("#page-title"),
+    dateLabel: $("#date-label"),
+    summary: $("#summary"),
+    filters: $("#filters"),
+    progressBlock: $("#progress-block"),
+    progressLabel: $("#progress-label"),
+    progressValue: $("#progress-value"),
+    progressBar: $("#progress-bar"),
+    progressFill: $("#progress"),
+    tasks: $("#tasks"),
+    indicator: $("#task-drop-indicator"),
+    quickText: $("#quick-text"),
+    modalBackdrop: $("#modal-backdrop"),
+    taskModal: $("#task-modal"),
+    taskText: $("#task-text"),
+    taskDue: $("#task-due"),
+    taskPriority: $("#task-priority"),
+    taskRepeat: $("#task-repeat"),
+    themeIcon: $("#theme-icon"),
+    statusAnnouncer: $("#status-announcer"),
+  },
   save = () => localStorage.setItem(KEY, JSON.stringify(data)),
   remaining = () => data.tasks.filter((t) => !t.done).length;
 if (migratedTaskTimestamps) save();
@@ -98,7 +122,7 @@ const priorityNames = {
 const DELETE_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14M10 11v6M14 11v6"/></svg>`;
 
 function announce(message) {
-  const el = $("#status-announcer");
+  const el = ui.statusAnnouncer;
   if (!el) return;
   el.textContent = "";
   requestAnimationFrame(() => {
@@ -151,14 +175,14 @@ function nav() {
       all: remaining(),
       done: data.tasks.filter((t) => t.done).length,
     };
-  $("#side-nav").innerHTML = views.map((v) => navButtonHtml(v, counts)).join("");
+  ui.sideNav.innerHTML = views.map((v) => navButtonHtml(v, counts)).join("");
   const priorities = [
     ["high", "مهمة", "!"],
     ["medium", "متوسطة", "▲"],
     ["normal", "عادية", "○"],
     ["all", "كل الأولويات", "◆"],
   ];
-  $("#priorities").innerHTML = priorities
+  ui.priorities.innerHTML = priorities
     .map((p) => {
       const active = activePriority === p[0];
       const count = data.tasks.filter(
@@ -167,24 +191,6 @@ function nav() {
       return `<button type="button" class="list-button ${active ? "active" : ""}" data-priority="${p[0]}" aria-pressed="${active}"><span class="nav-label"><span class="nav-icon" aria-hidden="true">${p[2]}</span><span>${p[1]}</span></span><b class="count">${count}</b></button>`;
     })
     .join("");
-  document.querySelectorAll("[data-view]").forEach(
-    (b) =>
-      (b.onclick = () => {
-        view = b.dataset.view;
-        activePriority = "all";
-        if (b.closest(".side")) setDrawer(false);
-        render();
-      }),
-  );
-  document.querySelectorAll("[data-priority]").forEach(
-    (b) =>
-      (b.onclick = () => {
-        activePriority = b.dataset.priority;
-        view = "all";
-        setDrawer(false);
-        render();
-      }),
-  );
 }
 
 function dueMeta(t) {
@@ -226,13 +232,6 @@ function emptyStateHtml() {
   </div>`;
 }
 
-function bindEmptyActions() {
-  $("#empty-focus-add")?.addEventListener("click", () => {
-    $("#quick-text").focus();
-  });
-  $("#empty-advanced")?.addEventListener("click", () => openModal());
-}
-
 function visibleTasks() {
   const now = today(),
     list = data.tasks.filter((t) => {
@@ -258,11 +257,11 @@ function updateHeader(list) {
     all: "كل المهام",
     done: "المنجزة",
   };
-  $("#page-title").textContent =
+  ui.pageTitle.textContent =
     activePriority === "all"
       ? names[view]
       : priorityNames[activePriority] || "مهامي";
-  $("#date-label").textContent = new Intl.DateTimeFormat("ar-EG", {
+  ui.dateLabel.textContent = new Intl.DateTimeFormat("ar-EG", {
     weekday: "long",
     day: "numeric",
     month: "long",
@@ -272,7 +271,7 @@ function updateHeader(list) {
     dailyOpen = daily.length - dailyDone;
   const showProgress =
     daily.length && view === "today" && activePriority === "all";
-  $("#summary").textContent = showProgress
+  ui.summary.textContent = showProgress
     ? dailyOpen > 0
       ? `${dailyOpen} ${dailyOpen === 1 ? "مهمة متبقية" : "مهام متبقية"} لليوم`
       : "أنجزت كل مهام اليوم — أحسنت"
@@ -285,33 +284,30 @@ function updateHeader(list) {
 }
 
 function updateFilters() {
-  $("#filters").innerHTML = views
-    .map((v) => {
-      const active = view === v[0] && activePriority === "all";
-      return `<button type="button" role="tab" aria-selected="${active}" class="${active ? "active" : ""}" data-view="${v[0]}">${v[1]}</button>`;
-    })
-    .join("");
-  $("#filters")
-    .querySelectorAll("[data-view]")
-    .forEach(
-      (b) =>
-        (b.onclick = () => {
-          view = b.dataset.view;
-          activePriority = "all";
-          render();
-        }),
-    );
+  if (!ui.filters.children.length) {
+    ui.filters.innerHTML = views
+      .map(
+        (v) =>
+          `<button type="button" role="tab" aria-selected="false" data-view="${v[0]}">${v[1]}</button>`,
+      )
+      .join("");
+  }
+  ui.filters.querySelectorAll("[data-view]").forEach((button) => {
+    const active = view === button.dataset.view && activePriority === "all";
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-selected", String(active));
+  });
 }
 
 function updateProgress({ daily, dailyDone, showProgress }) {
-  const progressBlock = $("#progress-block"),
+  const progressBlock = ui.progressBlock,
     pct = daily.length ? Math.round((dailyDone / daily.length) * 100) : 0;
   if (showProgress) {
     progressBlock.hidden = false;
-    $("#progress-label").textContent = "تقدم اليوم";
+    ui.progressLabel.textContent = "تقدم اليوم";
 
     // — Count tick animation —
-    const valEl = $("#progress-value");
+    const valEl = ui.progressValue;
     const newText = `${dailyDone} من ${daily.length}`;
     if (valEl.textContent !== newText) {
       valEl.classList.add("ticking");
@@ -323,14 +319,14 @@ function updateProgress({ daily, dailyDone, showProgress }) {
       valEl.textContent = newText;
     }
 
-    $("#progress-bar").setAttribute("aria-valuenow", String(pct));
-    $("#progress-bar").setAttribute(
+    ui.progressBar.setAttribute("aria-valuenow", String(pct));
+    ui.progressBar.setAttribute(
       "aria-valuetext",
       `${dailyDone} من ${daily.length} مكتملة`,
     );
 
     // — Fill classes: has-progress / complete / just-advanced —
-    const fillEl = $("#progress");
+    const fillEl = ui.progressFill;
     const prevPct = parseFloat(fillEl.style.width) || 0;
     const advancing = pct > prevPct;
 
@@ -401,7 +397,7 @@ function createTaskElement(task) {
 
 function reconcileTaskList(list) {
   if (activeDragTask) return;
-  const container = $("#tasks");
+  const container = ui.tasks;
   const existing = new Map(
     [...container.querySelectorAll(".task")].map((card) => [
       card.dataset.id,
@@ -410,7 +406,6 @@ function reconcileTaskList(list) {
   );
   if (!list.length) {
     if (!container.querySelector(".empty")) container.innerHTML = emptyStateHtml();
-    bindEmptyActions();
     return;
   }
   container.querySelector(".empty")?.remove();
@@ -442,7 +437,7 @@ function render() {
   updateProgress(progressState);
   reconcileTaskList(list);
   if (lastCompletedId) {
-    const card = document.querySelector(`.task[data-id="${lastCompletedId}"]`);
+    const card = ui.tasks.querySelector(`.task[data-id="${lastCompletedId}"]`);
     if (card) card.classList.add("just-completed");
     lastCompletedId = null;
   }
@@ -762,6 +757,21 @@ $("#task-modal").onsubmit = (e) => {
 };
 
 $("#tasks").addEventListener("click", (e) => {
+  const viewButton = e.target.closest("[data-view]");
+  if (viewButton && viewButton.closest("#tasks")) {
+    view = viewButton.dataset.view;
+    activePriority = "all";
+    render();
+    return;
+  }
+  if (e.target.closest("#empty-focus-add")) {
+    ui.quickText.focus();
+    return;
+  }
+  if (e.target.closest("#empty-advanced")) {
+    openModal();
+    return;
+  }
   const check = e.target.closest(".check");
   if (check) {
     toggle(check.dataset.id);
@@ -779,11 +789,37 @@ $("#tasks").addEventListener("click", (e) => {
   }
 });
 
-$("#tasks").addEventListener("pointerdown", (e) => {
+ui.tasks.addEventListener("pointerdown", (e) => {
   const handle = e.target.closest(".drag-handle");
   if (handle) {
     startDrag(e, handle.closest(".task"));
   }
+});
+
+ui.sideNav.addEventListener("click", (e) => {
+  const button = e.target.closest("[data-view]");
+  if (!button) return;
+  view = button.dataset.view;
+  activePriority = "all";
+  setDrawer(false);
+  render();
+});
+
+ui.priorities.addEventListener("click", (e) => {
+  const button = e.target.closest("[data-priority]");
+  if (!button) return;
+  activePriority = button.dataset.priority;
+  view = "all";
+  setDrawer(false);
+  render();
+});
+
+ui.filters.addEventListener("click", (e) => {
+  const button = e.target.closest("[data-view]");
+  if (!button) return;
+  view = button.dataset.view;
+  activePriority = "all";
+  render();
 });
 
 function setTheme(next) {
