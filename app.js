@@ -695,6 +695,23 @@ function closeModal() {
   editingId = null;
 }
 
+function keepQuickTextCaretVisible() {
+  const input = ui.quickText;
+  if (
+    document.activeElement !== input ||
+    input.selectionStart !== input.selectionEnd ||
+    input.selectionStart !== input.value.length
+  ) {
+    return;
+  }
+
+  input.scrollLeft = input.scrollWidth;
+}
+
+ui.quickText.addEventListener("input", keepQuickTextCaretVisible);
+ui.quickText.addEventListener("focus", keepQuickTextCaretVisible);
+ui.quickText.addEventListener("keyup", keepQuickTextCaretVisible);
+
 $("#capture").onsubmit = (e) => {
   e.preventDefault();
   const text = $("#quick-text").value.trim();

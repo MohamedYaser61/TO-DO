@@ -578,7 +578,9 @@ main {
   font-weight: 400;
   overflow-x: auto;
   overflow-y: hidden;
-  text-align: start;
+  direction: ltr;
+  text-align: left;
+  unicode-bidi: normal;
   white-space: nowrap;
   color: var(--ink);
 }
