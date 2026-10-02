@@ -730,141 +730,15 @@ main {
    Hidden by default. Shown only in the 1–99% state.
    Sized slightly larger than the 8px track for a clear endpoint.
    ─────────────────────────────────────────────────────────── */
-.progress i::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: -2px;
-  transform: translateY(-50%);
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--brand-bright);
-  opacity: 0;
-  display: none;
-  pointer-events: none;
-}
-
 /* ════════════════════════════════════════════════════════════
-   STATE 0% — static, empty
-   No class. No animation. Nothing moves.
+   STATE 1–99% — simple transition
    ════════════════════════════════════════════════════════════ */
-
-/* ════════════════════════════════════════════════════════════
-   STATE 1–99% — calm, living, breathing progress
-   ① Fill breathing via filter:brightness().
-     brightness() on a coloured fill is clearly perceptible
-     on a thin bar; opacity alone is not.
-     Cycle: 4.5s ease-in-out.
-   ② Endpoint dot glow breathing.
-     Cycle: 3.8s ease-in-out — offset from fill so they
-     never peak at the exact same moment.
-   ════════════════════════════════════════════════════════════ */
-.progress i.has-progress {
-  animation: pb-fill-breathe 4.5s ease-in-out infinite;
-}
-
-@keyframes pb-fill-breathe {
-  0%, 100% {
-    filter: brightness(1.0);
-    box-shadow: none;
-  }
-  50% {
-    filter: brightness(1.13);
-    box-shadow: 0 0 5px 0px color-mix(in srgb, var(--brand) 28%, transparent);
-  }
-}
-
-.progress i.has-progress::before {
-  display: block;
-  opacity: 0.82;
-  animation: pb-dot-breathe 4s ease-in-out infinite;
-}
-
-@keyframes pb-dot-breathe {
-  0%, 100% {
-    opacity: 0.82;
-    box-shadow:
-      0 0 0 2px color-mix(in srgb, var(--brand) 12%, transparent),
-      0 0 4px 1px color-mix(in srgb, var(--brand) 16%, transparent);
-  }
-  50% {
-    opacity: 0.92;
-    box-shadow:
-      0 0 0 2px color-mix(in srgb, var(--brand) 16%, transparent),
-      0 0 6px 1px color-mix(in srgb, var(--brand) 22%, transparent);
-  }
-}
-
-/* ── Completion pop — brief endpoint emphasis on task complete
-   .just-advanced overrides the idle dot animation momentarily.
-   JS removes this class after animationend fires.
-   ─────────────────────────────────────────────────────────── */
-.progress i.just-advanced::before {
-  animation: pb-dot-pop 0.65s var(--ease-smooth) forwards;
-}
-
-@keyframes pb-dot-pop {
-  0% {
-    opacity: 0.85;
-    box-shadow: 0 0 0 2px color-mix(in srgb, var(--brand) 18%, transparent),
-                0 0 5px 1px color-mix(in srgb, var(--brand) 28%, transparent);
-  }
-  30% {
-    opacity: 1;
-    box-shadow: 0 0 0 4px color-mix(in srgb, var(--brand) 14%, transparent),
-                0 0 9px 2px color-mix(in srgb, var(--brand) 22%, transparent);
-  }
-  100% {
-    opacity: 0.85;
-    box-shadow: 0 0 0 2px color-mix(in srgb, var(--brand) 18%, transparent),
-                0 0 5px 1px color-mix(in srgb, var(--brand) 28%, transparent);
-  }
-}
-
-/* ════════════════════════════════════════════════════════════
-   STATE 100% — calm, completed, "Done."
-   .complete has higher specificity than .has-progress so it
-   cleanly overrides both fill breathing and dot animation.
-   One-shot settle glow fires once, then bar is fully static.
-   ════════════════════════════════════════════════════════════ */
-.progress i.complete {
-  background: var(--brand);
-  filter: none;
-  animation: pb-complete-settle 1.6s var(--ease-smooth) forwards;
-}
-
-.progress i.complete::after {
-  /* Static shine only — no animation */
-  animation: none;
-}
-
-.progress i.complete::before {
-  /* Endpoint dot hidden — whole bar communicates completion */
-  display: none;
-}
-
-@keyframes pb-complete-settle {
-  0%   { box-shadow: none; }
-  40%  {
-    box-shadow:
-      0 0 0 2px color-mix(in srgb, var(--brand) 20%, transparent),
-      0 0 8px 1px color-mix(in srgb, var(--brand) 14%, transparent);
-  }
-  100% { box-shadow: none; }
-}
 
 /* ── Reduced motion ───────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   .progress i.has-progress {
     animation: none;
     filter: none;
-  }
-  .progress i.has-progress::before {
-    animation: none;
-  }
-  .progress i.complete {
-    animation: none;
   }
 }
 
@@ -983,30 +857,10 @@ main {
 }
 
 /* Drag states */
-.task.drag-source {
-  display: none;
-}
-
-.task.drag-floating {
-  position: fixed;
+.task.drag-active {
   z-index: 20;
-  margin: 0;
-  pointer-events: none;
-  opacity: 0.97;
   box-shadow: var(--shadow-lg);
-  transform: scale(1.015) rotate(0.5deg);
-  transform-origin: center;
-  transition:
-    transform 0.08s ease-out;
-}
-
-.task-placeholder {
-  position: relative;
-  min-height: 60px;
-  border-radius: var(--radius-md);
-  background: color-mix(in srgb, var(--brand-soft) 60%, transparent);
-  border: 2px dashed color-mix(in srgb, var(--brand) 35%, transparent);
-  transition: height var(--duration-base) var(--ease-smooth);
+  pointer-events: none;
 }
 
 /* ============================================================
