@@ -548,6 +548,7 @@ main {
 .capture {
   display: grid;
   grid-template-columns: 1fr auto;
+  min-width: 0;
   gap: var(--space-2);
   direction: rtl;
   padding: var(--space-2);
@@ -568,14 +569,17 @@ main {
 
 .capture input {
   min-width: 0;
+  width: 100%;
+  max-width: 100%;
   border: 0;
   background: transparent;
   padding: 13px var(--space-3);
   font-size: var(--font-size-md);
   font-weight: 400;
-  direction: rtl;
-  text-align: right;
-  unicode-bidi: isolate;
+  overflow-x: auto;
+  overflow-y: hidden;
+  text-align: start;
+  white-space: nowrap;
   color: var(--ink);
 }
 
