@@ -367,6 +367,12 @@ a:focus-visible {
   align-self: start;
 }
 
+.drawer-close,
+.drawer-trigger,
+.drawer-backdrop {
+  display: none;
+}
+
 .brand {
   display: flex;
   align-items: center;
@@ -1363,10 +1369,7 @@ main {
   justify-content: center;
 }
 
-/* ============================================================
-   MOBILE NAV — hidden by default
-   ============================================================ */
-.mobile-nav {
+.drawer-backdrop[hidden] {
   display: none;
 }
 
@@ -1592,10 +1595,63 @@ main {
 @media (max-width: 720px) {
   .app {
     display: block;
-    padding: var(--space-5) var(--space-4) calc(84px + env(safe-area-inset-bottom));
+    padding: env(safe-area-inset-top) var(--space-4)
+      calc(var(--space-5) + env(safe-area-inset-bottom));
   }
 
   .side {
+    position: fixed;
+    z-index: 80;
+    inset-block: 0;
+    inset-inline-start: 0;
+    width: min(86vw, 320px);
+    max-width: 100%;
+    overflow-y: auto;
+    padding: calc(var(--space-6) + env(safe-area-inset-top))
+      var(--space-4) calc(var(--space-6) + env(safe-area-inset-bottom));
+    background: var(--panel-elevated);
+    box-shadow: var(--shadow-lg);
+    transform: translateX(105%);
+    transition: transform var(--duration-slow) var(--ease-smooth);
+    pointer-events: none;
+  }
+
+  .drawer-open .side {
+    transform: translateX(0);
+    pointer-events: auto;
+  }
+
+  .drawer-open {
+    overflow: hidden;
+  }
+
+  .drawer-backdrop {
+    position: fixed;
+    z-index: 70;
+    inset: 0;
+    display: block;
+    border: 0;
+    background: rgb(10 12 11 / 0.35);
+    opacity: 1;
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+  }
+
+  .drawer-close {
+    display: grid;
+    position: absolute;
+    inset-block-start: calc(var(--space-4) + env(safe-area-inset-top));
+    inset-inline-end: var(--space-4);
+    width: 40px;
+    height: 40px;
+  }
+
+  .side .brand {
+    margin-top: var(--space-8);
+  }
+
+  .side .side-heading:first-of-type,
+  .side #side-nav {
     display: none;
   }
 
@@ -1639,6 +1695,10 @@ main {
     margin-bottom: var(--space-4);
   }
 
+  .drawer-trigger {
+    display: grid;
+  }
+
   .subtitle {
     font-size: var(--font-size-sm);
   }
@@ -1665,62 +1725,15 @@ main {
     opacity: 0.6;
   }
 
-  /* MOBILE NAVIGATION */
-  .mobile-nav {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2px;
-    position: fixed;
-    z-index: 40;
-    bottom: 0;
-    inset-inline: 0;
-    padding: var(--space-2) var(--space-3) calc(var(--space-2) + env(safe-area-inset-bottom));
-    background: color-mix(in srgb, var(--panel) 92%, transparent);
-    border-top: 1px solid var(--line);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-  }
-
-  .mobile-nav button {
+  .toolbar {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 3px;
-    min-height: 50px;
-    border: 0;
-    background: transparent;
-    color: var(--muted);
-    font-size: var(--font-size-xs);
-    font-weight: 500;
-    padding: var(--space-1);
-    border-radius: var(--radius-sm);
-    transition:
-      color var(--transition),
-      background var(--transition);
+    flex-wrap: wrap;
   }
 
-  .mobile-nav button .nav-icon {
-    font-size: 19px;
-    line-height: 1;
-  }
-
-  .mobile-nav button .nav-text {
-    line-height: 1.2;
-  }
-
-  /* Active mobile nav item — emerald */
-  .mobile-nav button.active {
-    color: var(--brand);
-    background: color-mix(in srgb, var(--brand-soft) 70%, transparent);
-  }
-
-  .mobile-nav .count {
-    display: none;
-  }
-
-  .toast-stack {
-    bottom: calc(70px + env(safe-area-inset-bottom));
+  .toolbar .search-wrap {
+    order: 1;
+    flex: 1 1 100%;
+    margin-inline-start: 0;
   }
 
   .empty {

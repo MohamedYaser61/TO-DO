@@ -119,15 +119,11 @@ function showToast(message, actionLabel, onAction) {
   stack.appendChild(toast);
 }
 
-function navButtonHtml(v, counts, { mobile = false } = {}) {
+function navButtonHtml(v, counts) {
   const active = view === v[0] && activePriority === "all";
   const count = counts[v[0]];
-  if (mobile) {
-    const iconDir = v[0] === "upcoming" ? " nav-icon--dir" : "";
-    return `<button type="button" class="${active ? "active" : ""}" data-view="${v[0]}" aria-current="${active ? "page" : "false"}"><span class="nav-icon${iconDir}" aria-hidden="true">${v[2]}</span><span class="nav-text">${v[1]}</span></button>`;
-  }
-    const iconDir = v[0] === "upcoming" ? " nav-icon--dir" : "";
-    return `<button type="button" class="${active ? "active" : ""}" data-view="${v[0]}" aria-current="${active ? "page" : "false"}"><span class="nav-label"><span class="nav-icon${iconDir}" aria-hidden="true">${v[2]}</span><span>${v[1]}</span></span><b class="count">${count}</b></button>`;
+  const iconDir = v[0] === "upcoming" ? " nav-icon--dir" : "";
+  return `<button type="button" class="${active ? "active" : ""}" data-view="${v[0]}" aria-current="${active ? "page" : "false"}"><span class="nav-label"><span class="nav-icon${iconDir}" aria-hidden="true">${v[2]}</span><span>${v[1]}</span></span><b class="count">${count}</b></button>`;
 }
 
 function nav() {
@@ -139,9 +135,6 @@ function nav() {
       done: data.tasks.filter((t) => t.done).length,
     };
   $("#side-nav").innerHTML = views.map((v) => navButtonHtml(v, counts)).join("");
-  $("#mobile-nav").innerHTML = views
-    .map((v) => navButtonHtml(v, counts, { mobile: true }))
-    .join("");
   const priorities = [
     ["high", "مهمة", "!"],
     ["medium", "متوسطة", "▲"],
@@ -162,6 +155,7 @@ function nav() {
       (b.onclick = () => {
         view = b.dataset.view;
         activePriority = "all";
+        if (b.closest(".side")) setDrawer(false);
         render();
       }),
   );
@@ -170,6 +164,7 @@ function nav() {
       (b.onclick = () => {
         activePriority = b.dataset.priority;
         view = "all";
+        setDrawer(false);
         render();
       }),
   );
@@ -661,6 +656,11 @@ $("#theme").onclick = () => {
 };
 
 document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && document.body.classList.contains("drawer-open")) {
+    e.preventDefault();
+    setDrawer(false);
+    return;
+  }
   if (e.key === "Escape" && !$("#modal-backdrop").hidden) {
     e.preventDefault();
     closeModal();
@@ -679,6 +679,24 @@ document.addEventListener("keydown", (e) => {
     $("#search").focus();
   }
 });
+
+const drawer = {
+  trigger: $("#drawer-trigger"),
+  close: $("#drawer-close"),
+  backdrop: $("#drawer-backdrop"),
+};
+
+function setDrawer(open) {
+  document.body.classList.toggle("drawer-open", open);
+  drawer.backdrop.hidden = !open;
+  drawer.trigger.setAttribute("aria-expanded", String(open));
+  if (open) drawer.close.focus();
+  else drawer.trigger.focus();
+}
+
+drawer.trigger.onclick = () => setDrawer(true);
+drawer.close.onclick = () => setDrawer(false);
+drawer.backdrop.onclick = () => setDrawer(false);
 
 $("#export").onclick = () => {
   const a = document.createElement("a");

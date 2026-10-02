@@ -17,7 +17,15 @@
   <body>
     <a class="skip-link" href="#main-content">تخطي إلى المحتوى</a>
     <div class="app">
-      <aside class="side" aria-label="التنقل الجانبي">
+      <aside class="side" id="sidebar" aria-label="التنقل الجانبي">
+        <button
+          type="button"
+          class="drawer-close icon-button"
+          id="drawer-close"
+          aria-label="إغلاق القائمة"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
         <div class="brand">
           <span class="logo" aria-hidden="true">✓</span>
           <span class="brand-name">مهامي</span>
@@ -45,6 +53,16 @@
             <p class="subtitle" id="summary"></p>
           </div>
           <div class="top-actions">
+            <button
+              type="button"
+              class="icon-button drawer-trigger"
+              id="drawer-trigger"
+              aria-label="فتح القائمة"
+              aria-controls="sidebar"
+              aria-expanded="false"
+            >
+              <span aria-hidden="true">☰</span>
+            </button>
             <button
               type="button"
               class="icon-button icon-button--accent"
@@ -131,7 +149,7 @@
       </main>
     </div>
 
-    <nav class="mobile-nav" id="mobile-nav" aria-label="التنقل الرئيسي"></nav>
+    <button class="drawer-backdrop" id="drawer-backdrop" type="button" aria-label="إغلاق القائمة" hidden></button>
 
     <div
       class="modal-backdrop"
