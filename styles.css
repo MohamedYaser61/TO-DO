@@ -1643,8 +1643,16 @@ main {
   .drawer-trigger {
     display: grid;
     position: absolute;
-    inset-block-start: 59px;
+    inset-block-start: 37px;
     inset-inline-start: 0;
+    transform: translateY(-50%);
+  }
+
+  .top-actions {
+    position: absolute;
+    inset-block-start: 37px;
+    inset-inline-end: 0;
+    padding-top: 0;
     transform: translateY(-50%);
   }
 
